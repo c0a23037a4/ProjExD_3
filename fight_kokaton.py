@@ -95,7 +95,7 @@ class Beam:
         """
         self.img = pg.image.load(f"fig/beam.png")
         self.rct = self.img.get_rect()
-        self.rct.center = bird.rct.center
+        self.rct.centery = bird.rct.centery
         self.rct.left = bird.rct.right
         self.vx, self.vy = +5, 0
 
@@ -146,7 +146,7 @@ def main():
     bg_img = pg.image.load("fig/pg_bg.jpg")
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
-    beam = Beam(bird)
+    beam = None # Beam(bird)
     # bomb2 = Bomb((0, 0, 255), 10)
     # bomb3 = Bomb((0, 255, 0), 10)
     clock = pg.time.Clock()
@@ -169,7 +169,8 @@ def main():
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        beam.update(screen)   
+        if beam is not None:
+            beam.update(screen)   
         bomb.update(screen)
         # bomb2.update(screen)
         # bomb3.update(screen)
