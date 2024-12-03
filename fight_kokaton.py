@@ -29,12 +29,21 @@ class Score:
     スコア表示に関するクラス
     """
     def __init__(self, xy: tuple[int, int] = (100, HEIGHT - 50)):
+        """
+        スコア表示用Surfaceを生成する
+        引数 xy：スコア表示の座標タプル
+        """
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.color = (0, 0, 255)
         self.point = 0
         self.img = self.fonto.render(f"スコア: {self.point}", 0, self.color)
     
     def update(self, point: int, screen: pg.Surface):
+        """
+        スコアを更新し，画面に転送する
+        引数1 point：スコア値
+        引数2 screen：画面Surface
+        """
         self.img = self.fonto.render(f"スコア: {self.point}", 0, self.color)
         screen.blit(self.img, (100, HEIGHT - 50))
 
