@@ -25,6 +25,9 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 class Score:
+    """
+    スコア表示に関するクラス
+    """
     def __init__(self, xy: tuple[int, int] = (100, HEIGHT - 50)):
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.color = (0, 0, 255)
@@ -151,6 +154,23 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+class explosion:
+    """
+    爆発の描画に関するクラス
+    """
+    def __init__(self, xy: tuple[int, int]):
+        self.img = pg.image.load("fig/explosion.gif")
+        self.fimg = pg.transform.flip(self.img, True, False)
+        self.imgs = [self.img, self.fimg]
+        self.rct = self.img.get_rect()
+        self.rct.center = xy
+        self.life = 10
+
+    def update(self, screen: pg.Surface):
+        self.life -= 1
+        if self.life > 0:
+            screen.blit(self.imgs[int(self.life) % 2], self.rct)
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -162,6 +182,7 @@ def main():
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None # Beam(bird)
     beams = []
+    exlst = []
     # bomb2 = Bomb((0, 0, 255), 10)
     # bomb3 = Bomb((0, 255, 0), 10)
     clock = pg.time.Clock()
@@ -195,6 +216,8 @@ def main():
                     beams[j] = None
                     beams = [beam for beam in beams if beam is not None]
                     bird.change_img(6, screen)
+                    ex = explosion(bomb.rct.center)
+                    exlst.append(ex)
                     pg.display.update()
         
         key_lst = pg.key.get_pressed()
@@ -202,11 +225,13 @@ def main():
         score.update(score.point, screen)
         bombs = [bomb for bomb in bombs if bomb is not None]
         beams = [beam for beam in beams if check_bound(beam.rct) == (True, True)]
-        print(beams)
+        exlst = [ex for ex in exlst if ex.life > 0]
         for beam in beams:
             beam.update(screen)  
         for bomb in bombs:
-            bomb.update(screen)  
+            bomb.update(screen)
+        for ex in exlst:
+            ex.update(screen)  
         # bomb2.update(screen)
         # bomb3.update(screen)
         pg.display.update()
