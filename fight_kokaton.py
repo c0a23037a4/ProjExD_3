@@ -24,6 +24,16 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+class Score:
+    def __init__(self, xy: tuple[int, int] = (100, HEIGHT - 50)):
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color = (0, 0, 255)
+        self.point = 0
+        self.img = self.fonto.render(f"スコア: {self.point}", 0, self.color)
+    
+    def update(self, point: int, screen: pg.Surface):
+        self.img = self.fonto.render(f"スコア: {self.point}", 0, self.color)
+        screen.blit(self.img, (100, HEIGHT - 50))
 
 class Bird:
     """
@@ -146,6 +156,7 @@ def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
     bg_img = pg.image.load("fig/pg_bg.jpg")
+    score = Score()
     bird = Bird((300, 200))
     bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
@@ -177,6 +188,7 @@ def main():
         for i, bomb in enumerate(bombs):
             if beam is not None:
                 if beam.rct.colliderect(bomb.rct):
+                    score.point += 1
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)
@@ -184,6 +196,7 @@ def main():
         
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
+        score.update(score.point, screen)
         bombs = [bomb for bomb in bombs if bomb is not None]
         if beam is not None:
             beam.update(screen)  
