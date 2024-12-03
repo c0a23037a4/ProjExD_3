@@ -159,6 +159,10 @@ class explosion:
     爆発の描画に関するクラス
     """
     def __init__(self, xy: tuple[int, int]):
+        """
+        引数に基づき爆発画像Surfaceを生成する
+        引数 xy：爆発画像の中心座標タプル
+        """
         self.img = pg.image.load("fig/explosion.gif")
         self.fimg = pg.transform.flip(self.img, True, False)
         self.imgs = [self.img, self.fimg]
@@ -167,6 +171,10 @@ class explosion:
         self.life = 10
 
     def update(self, screen: pg.Surface):
+        """
+        爆発の描画について更新する
+        引数 screen：画面Surface
+        """
         self.life -= 1
         if self.life > 0:
             screen.blit(self.imgs[int(self.life) % 2], self.rct)
